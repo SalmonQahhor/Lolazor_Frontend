@@ -27,7 +27,6 @@ export interface Person {
   bio: string;
   episodes_count: number;
   
-  // JSON (social_links) o'rniga aniq tarmoqlar
   telegram?: string | null;
   instagram?: string | null;
   facebook?: string | null;
@@ -71,12 +70,14 @@ export interface EpisodeList {
   is_super_episode: boolean;
   hosts: PersonMinimal[];
   guests: PersonMinimal[];
+  topics?: Topic[];
 }
 
 export interface EpisodeDetail extends EpisodeList {
   description: string;
   quotes: Quote[];
   resources: Resource[];
+  topics?: Topic[];
 }
 
 export interface EpisodesQueryParams {
@@ -85,9 +86,10 @@ export interface EpisodesQueryParams {
   hosts?: number;
   guests?: number;
   release_date?: string;
-  is_super_episode?: boolean;
+  is_super_episode?: boolean | string;
   ordering?: string;
   release_date__year?: number;
+  topics__slug?: string;
 }
 
 export interface PeopleQueryParams {

@@ -61,7 +61,12 @@ export default function EpisodeDetailPage() {
     );
   }
 
-  const allPeople: PersonMinimal[] = [...episode.hosts, ...episode.guests];
+  const hosts = episode.hosts || [];
+  const guests = episode.guests || [];
+  const quotes = episode.quotes || [];
+  const resources = episode.resources || [];
+  const topics = episode.topics || [];
+  const allPeople: PersonMinimal[] = [...hosts, ...guests];
 
   function jumpTo(timestamp: string) {
     setStartSeconds(timestampToSeconds(timestamp));
@@ -96,7 +101,7 @@ export default function EpisodeDetailPage() {
               Super epizod
             </span>
           )}
-          {episode.topics.map((topic) => (
+          {topics.map((topic) => (
             <Link
               key={topic.id}
               href={`/episodes?topics__slug=${topic.slug}`}
@@ -116,10 +121,12 @@ export default function EpisodeDetailPage() {
             <Calendar size={15} />
             {formatDate(episode.release_date)}
           </span>
-          <span className="flex items-center gap-1.5">
-            <Clock size={15} />
-            {formatDuration(episode.duration)}
-          </span>
+          {(episode as unknown as { duration?: string }).duration && (
+            <span className="flex items-center gap-1.5">
+              <Clock size={15} />
+              {formatDuration((episode as unknown as { duration: string }).duration)}
+            </span>
+          )}
           <a
             href={episode.youtube_url}
             target="_blank"
@@ -141,13 +148,13 @@ export default function EpisodeDetailPage() {
       <div className="mt-10 grid gap-10 lg:grid-cols-[2fr_1fr]">
         <div className="flex flex-col gap-10">
           {/* Timestamps */}
-          {episode.quotes.length > 0 && (
+          {quotes.length > 0 && (
             <section>
               <h2 className="mb-4 text-lg font-bold text-text-main">
                 Vaqt belgilari
               </h2>
               <ul className="card-surface divide-y divide-border overflow-hidden">
-                {episode.quotes.map((quote) => (
+                {quotes.map((quote) => (
                   <li key={quote.id}>
                     <button
                       type="button"
@@ -171,13 +178,13 @@ export default function EpisodeDetailPage() {
           )}
 
           {/* Quotes */}
-          {episode.quotes.length > 0 && (
+          {quotes.length > 0 && (
             <section>
               <h2 className="mb-4 text-lg font-bold text-text-main">
                 Iqtiboslar
               </h2>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                {episode.quotes.map((quote) => (
+                {quotes.map((quote) => (
                   <QuoteCard key={quote.id} quote={quote} />
                 ))}
               </div>
@@ -185,13 +192,13 @@ export default function EpisodeDetailPage() {
           )}
 
           {/* Resources */}
-          {episode.resources.length > 0 && (
+          {resources.length > 0 && (
             <section>
               <h2 className="mb-4 text-lg font-bold text-text-main">
                 Tilga olingan manbalar va kitoblar
               </h2>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {episode.resources.map((resource) => (
+                {resources.map((resource) => (
                   <ResourceBadge key={resource.id} resource={resource} />
                 ))}
               </div>
@@ -201,11 +208,11 @@ export default function EpisodeDetailPage() {
 
         {/* Sidebar: hosts & guests */}
         <aside className="flex flex-col gap-6">
-          {episode.hosts.length > 0 && (
-            <PeopleGroup title="Mezbonlar" people={episode.hosts} />
+          {hosts.length > 0 && (
+            <PeopleGroup title="Mezbonlar" people={hosts} />
           )}
-          {episode.guests.length > 0 && (
-            <PeopleGroup title="Mehmonlar" people={episode.guests} />
+          {guests.length > 0 && (
+            <PeopleGroup title="Mehmonlar" people={guests} />
           )}
           {allPeople.length === 0 && (
             <p className="text-sm text-text-muted">

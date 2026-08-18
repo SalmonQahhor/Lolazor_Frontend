@@ -2,7 +2,7 @@
 
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Search, ChevronDown, Podcast } from "lucide-react";
+import { Search, ChevronDown, X } from "lucide-react";
 import { getEpisodes, ApiError } from "@/lib/api";
 import type { EpisodeList } from "@/types/api";
 import EpisodeCard from "@/components/EpisodeCard";
@@ -43,6 +43,7 @@ function EpisodesArchiveContent() {
   // URL parametrlari
   const isSuperEpisode = searchParams.get("is_super_episode") || "";
   const ordering = searchParams.get("ordering") || "-release_date";
+  const topicSlug = searchParams.get("topics__slug") || "";
   const page = Number(searchParams.get("page") || 1);
 
   const updateParams = useCallback(
@@ -52,7 +53,7 @@ function EpisodesArchiveContent() {
         if (value === null || value === "") next.delete(key);
         else next.set(key, String(value));
       });
-      if (!("page" in updates) && updates.page !== null) {
+      if (!("page" in updates)) {
         next.delete("page");
       }
       router.push(`/episodes?${next.toString()}`);
@@ -76,6 +77,7 @@ function EpisodesArchiveContent() {
           page,
           search: search || undefined,
           is_super_episode: isSuperEpisode === "true" ? "true" : undefined,
+          topics__slug: topicSlug || undefined,
           ordering,
         });
         if (cancelled) return;
@@ -90,15 +92,15 @@ function EpisodesArchiveContent() {
     }
     load();
     return () => { cancelled = true; };
-  }, [page, search, isSuperEpisode, ordering]);
+  }, [page, search, isSuperEpisode, topicSlug, ordering]);
 
   return (
     <div className="container-lolazor py-10 pb-24 sm:py-16">
       <VideoModal youtubeId={activeVideoId} onClose={() => setActiveVideoId(null)} />
 
-      {/* Markazlashtirilgan Kulgilektual Sarlavhasi */}
+      {/* Sarlavha */}
       <header className="mb-14 flex flex-col items-center justify-center text-center">
-        <span className="mb-4 text-[11px] font-bold uppercase tracking-widest text-lolazor-sky flex items-center gap-1.5">
+        <span className="mb-4 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-widest text-lolazor-sky">
           LOLAZOR ARXIVI
         </span>
         <h1 className="text-5xl font-extrabold tracking-tight text-text-main sm:text-6xl md:text-7xl">
@@ -106,9 +108,8 @@ function EpisodesArchiveContent() {
         </h1>
       </header>
 
-      {/* Kulgilektual Toolbar (Inline, qutichalarsiz, silliq) */}
+      {/* Filter va Qidiruv Toolbari */}
       <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        
         <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
           
           {/* Qidiruv */}
@@ -128,7 +129,7 @@ function EpisodesArchiveContent() {
             <select
               value={ordering}
               onChange={(e) => updateParams({ ordering: e.target.value })}
-              className="w-full appearance-none rounded-full border border-border/50 bg-card/40 py-3 pl-5 pr-10 text-sm font-medium text-text-main outline-none transition cursor-pointer focus:border-lolazor-sky focus:bg-card hover:bg-card/60"
+              className="w-full cursor-pointer appearance-none rounded-full border border-border/50 bg-card/40 py-3 pl-5 pr-10 text-sm font-medium text-text-main outline-none transition focus:border-lolazor-sky focus:bg-card hover:bg-card/60"
             >
               {ORDERING_OPTIONS.map((opt) => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -142,13 +143,24 @@ function EpisodesArchiveContent() {
             <select
               value={isSuperEpisode}
               onChange={(e) => updateParams({ is_super_episode: e.target.value || null })}
-              className="w-full appearance-none rounded-full border border-border/50 bg-card/40 py-3 pl-5 pr-10 text-sm font-medium text-text-main outline-none transition cursor-pointer focus:border-lolazor-sky focus:bg-card hover:bg-card/60"
+              className="w-full cursor-pointer appearance-none rounded-full border border-border/50 bg-card/40 py-3 pl-5 pr-10 text-sm font-medium text-text-main outline-none transition focus:border-lolazor-sky focus:bg-card hover:bg-card/60"
             >
               <option value="">Barcha epizodlar</option>
               <option value="true">Maxsus epizodlar</option>
             </select>
             <ChevronDown size={14} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-text-muted" />
           </div>
+
+          {/* Aktiv Mavzu (Topic) Filteri badge'i */}
+          {topicSlug && (
+            <button
+              onClick={() => updateParams({ topics__slug: null })}
+              className="inline-flex items-center gap-1.5 rounded-full border border-lolazor-sky/40 bg-lolazor-sky/10 px-4 py-2.5 text-xs font-semibold text-lolazor-sky transition hover:bg-lolazor-sky/20"
+            >
+              Mavzu: {topicSlug}
+              <X size={14} />
+            </button>
+          )}
 
         </div>
 
