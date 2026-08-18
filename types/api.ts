@@ -66,6 +66,7 @@ export interface EpisodeList {
   youtube_id: string;
   youtube_url: string;
   release_date: string;
+  duration?: string;
   views_count?: string;
   is_super_episode: boolean;
   hosts: PersonMinimal[];
@@ -77,7 +78,6 @@ export interface EpisodeDetail extends EpisodeList {
   description: string;
   quotes: Quote[];
   resources: Resource[];
-  topics?: Topic[];
 }
 
 export interface EpisodesQueryParams {

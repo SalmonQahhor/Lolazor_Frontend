@@ -121,10 +121,10 @@ export default function EpisodeDetailPage() {
             <Calendar size={15} />
             {formatDate(episode.release_date)}
           </span>
-          {(episode as unknown as { duration?: string }).duration && (
+          {episode.duration && (
             <span className="flex items-center gap-1.5">
               <Clock size={15} />
-              {formatDuration((episode as unknown as { duration: string }).duration)}
+              {formatDuration(episode.duration)}
             </span>
           )}
           <a
