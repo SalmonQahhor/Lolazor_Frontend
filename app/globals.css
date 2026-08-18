@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* LIGHT MODE (Kunduzgi rejim - Yoqimli oqish ranglar) */
+  :root {
+    --background: #F8FAFC;
+    --card: #FFFFFF;
+    --border: #E2E8F0;
+    --text-main: #0F172A;
+    --text-muted: #64748B;
+    --bg-radial: radial-gradient(circle at 15% 0%, rgba(13,34,97,0.04) 0%, rgba(248,250,252,0) 55%), radial-gradient(circle at 100% 20%, rgba(56,189,248,0.05) 0%, rgba(248,250,252,0) 45%);
+  }
+
+  /* DARK MODE (Tungi rejim - Lolazor to'q ko'k/qora) */
+  .dark {
+    --background: #0B0F19;
+    --card: #111827;
+    --border: #1F2937;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --bg-radial: radial-gradient(circle at 15% 0%, rgba(13,34,97,0.55) 0%, rgba(11,15,25,0) 55%), radial-gradient(circle at 100% 20%, rgba(56,189,248,0.12) 0%, rgba(11,15,25,0) 45%);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-text-main antialiased transition-colors duration-300;
+    background-image: theme("backgroundImage.lolazor-radial");
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    @apply bg-lolazor-sky/30 text-text-main;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-lolazor-sky ring-offset-2 ring-offset-background rounded-sm;
+  }
+
+  h1, h2, h3, h4 {
+    @apply tracking-tight;
+  }
+}
+
+@layer components {
+  .container-lolazor {
+    @apply mx-auto w-full max-w-content px-4 sm:px-6 lg:px-8;
+  }
+
+  .card-surface {
+    @apply bg-card border border-border rounded-2xl shadow-card transition-colors duration-300;
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.18em] text-lolazor-sky;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-lolazor-sky px-5 py-2.5 text-sm font-semibold text-background transition hover:brightness-110 active:brightness-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-text-main transition hover:border-lolazor-sky/50 hover:text-lolazor-sky disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1 text-xs font-medium text-text-muted transition hover:border-lolazor-sky/50 hover:text-lolazor-sky;
+  }
+
+  .pill-active {
+    @apply border-lolazor-sky bg-lolazor-sky/10 text-lolazor-sky;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+.snap-rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+.snap-rail::-webkit-scrollbar {
+  display: none;
+}
+.snap-item {
+  scroll-snap-align: start;
+}
+
+/* Renderni lag va qotishlarsiz tezlashtirish (GPU rendering) */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
