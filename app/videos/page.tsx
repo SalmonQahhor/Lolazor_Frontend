@@ -84,7 +84,10 @@ function VideosContent() {
         });
         if (search) params.set("search", search);
 
-        const res = await fetch(`http://localhost:8000/api/videos/?${params.toString()}`);
+        // Production va local muhit uchun dinamik base URL
+        const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.lolazorpodcast.com";
+        const res = await fetch(`${API_BASE}/api/videos/?${params.toString()}`);
+
         if (!res.ok) throw new Error("Videolarni yuklab bo'lmadi.");
 
         const data = await res.json();
@@ -99,15 +102,15 @@ function VideosContent() {
       }
     }
     load();
-    return () => { cancelled = true; };
-  }, [page, search, ordering]);
+    return () => {
+      cancelled = true;
+    };
+  }, [page, search, ordering, updateParams]);
 
   return (
     <div className="container-lolazor py-10 pb-24 sm:py-16">
-      
       <VideoModal youtubeId={activeVideoId} onClose={() => setActiveVideoId(null)} />
 
-      {/* Sarlavha Kulgilektual uslubida markazda */}
       <header className="mb-14 flex flex-col items-center justify-center text-center">
         <span className="mb-4 text-[11px] font-bold uppercase tracking-widest text-lolazor-sky">
           LOLAZOR VIDEOLARI
@@ -117,9 +120,7 @@ function VideosContent() {
         </h1>
       </header>
 
-      {/* Kulgilektual Toolbar */}
       <div className="mb-10 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        
         <div className="flex w-full flex-col gap-3 md:w-auto md:flex-row md:items-center">
           <div className="relative w-full md:w-[340px]">
             <Search size={16} className="absolute left-5 top-1/2 -translate-y-1/2 text-text-muted" />
@@ -139,7 +140,9 @@ function VideosContent() {
               className="w-full appearance-none rounded-full border border-border/50 bg-card/40 py-3 pl-5 pr-10 text-sm font-medium text-text-main outline-none transition cursor-pointer focus:border-lolazor-sky focus:bg-card hover:bg-card/60"
             >
               {ORDERING_OPTIONS.map((opt) => (
-                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </option>
               ))}
             </select>
             <ChevronDown size={14} className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-text-muted" />
