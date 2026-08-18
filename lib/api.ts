@@ -108,6 +108,9 @@ export async function getEpisodeDetail(id: number | string): Promise<EpisodeDeta
   }
 }
 
+// getEpisode nomli importlar uchun alias
+export const getEpisode = getEpisodeDetail;
+
 // --------------------------------------------------------------------------
 // People
 // --------------------------------------------------------------------------
