@@ -86,7 +86,7 @@ function VideosContent() {
 
         // Production va local muhit uchun dinamik base URL
         const API_BASE = process.env.NEXT_PUBLIC_API_URL || "https://api.lolazorpodcast.com";
-        const res = await fetch(`${API_BASE}/api/videos/?${params.toString()}`);
+        const res = await fetch(`${API_BASE}/videos/?${params.toString()}`);
 
         if (!res.ok) throw new Error("Videolarni yuklab bo'lmadi.");
 
